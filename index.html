@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Acoustic Consistency in Speech-Only and Interleaved Speech Language Models – Demo</title>
+  <style>
+    :root{
+      --blue:#1971c2; /* primary paper color */
+      --text:#111;
+      --bg:#fff;
+      --cream:#f3efe8; /* subtle Bauhaus backdrop */
+    }
+    html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family: Inter, Helvetica, Arial, system-ui, -apple-system, Segoe UI, Roboto, "Noto Sans", sans-serif;}
+    .page{max-width:1100px;margin:0 auto;padding:48px 24px 72px;}
+
+    /* Header */
+    .masthead{display:grid;grid-template-columns:1fr auto;gap:16px;align-items:end;margin-bottom:22px}
+    .title{font-size:clamp(28px,4.5vw,44px);line-height:1.08;font-weight:800;letter-spacing:0.2px;margin:0}
+    .authors{font-size:clamp(14px,1.6vw,16px);opacity:.9;margin-top:6px}
+
+    /* Buttons */
+    .links{display:flex;gap:10px;align-items:center}
+    .btn{--h:36px;display:inline-flex;align-items:center;justify-content:center;height:var(--h);padding:0 14px;border:2px solid #000;border-radius:999px;text-decoration:none;color:#000;font-weight:700;font-size:14px;letter-spacing:.02em;background:#fff}
+    .btn:hover{transform:translateY(-1px)}
+    .btn.blue{border-color:var(--blue);color:#fff;background:var(--blue)}
+
+    /* Bauhaus accent bar */
+    .accent{height:8px;background:repeating-linear-gradient(90deg,var(--blue) 0 24px,#000 24px 48px);mix-blend-normal;margin:18px 0 28px;border-radius:4px}
+
+    /* Figure */
+    figure{margin:0;background:var(--cream);border:2px solid #000;border-radius:10px;padding:14px}
+    figure img{display:block;width:100%;height:auto;border-radius:6px}
+    figcaption{font-size:13px;margin-top:8px;color:#333}
+
+    /* Samples */
+    .samples{margin-top:26px}
+    .samples h2{font-size:20px;margin:0 0 10px}
+    .grid{display:grid;grid-template-columns:200px 1fr 1fr 1fr;gap:14px;align-items:center}
+    .grid .hdr{font-size:14px;letter-spacing:.04em;text-transform:uppercase;color:var(--blue);border-bottom:2px solid var(--blue);padding-bottom:6px}
+    .row{display:contents}
+
+    /* Audio line control */
+    .audio{position:relative;height:28px;display:flex;align-items:center;cursor:pointer}
+    .audio .bar{position:relative;flex:1;height:4px;background:#d7e7f7;border-radius:3px;overflow:hidden}
+    .audio .fill{position:absolute;left:0;top:0;height:100%;width:0;background:var(--blue)}
+    .audio .knob{position:absolute;top:50%;transform:translate(-50%,-50%);width:0;height:0;border-left:7px solid var(--blue);border-top:6px solid transparent;border-bottom:6px solid transparent;}
+    .audio.playing .knob{border-left-color:#000}
+    .audio .time{font-size:12px;margin-left:8px;min-width:70px;text-align:right;color:#333}
+    .cell-label{font-size:15px}
+
+    /* Footer */
+    footer{margin-top:42px;padding-top:12px;border-top:1px solid #ddd;font-size:13px;color:#333}
+
+    /* Small screens */
+    @media (max-width:760px){
+      .grid{grid-template-columns:1fr;}
+      .grid .hdr{border-bottom:none}
+      .cell-label{margin-bottom:4px;color:#000;font-weight:600}
+      .row{display:block;border:1px solid #eee;border-radius:10px;padding:10px;margin-bottom:12px}
+      .row .col{margin-top:6px}
+      .masthead{grid-template-columns:1fr}
+      .links{justify-content:flex-start}
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header class="masthead" role="banner">
+      <div>
+        <h1 class="title">Acoustic Consistency in Speech-Only and Interleaved Speech Language Models</h1>
+        <div class="authors" id="authors">Authors: First Author, Second Author, Third Author</div>
+      </div>
+      <nav class="links" aria-label="Links">
+        <!-- Update href values below -->
+        <a class="btn" id="paperLink" href="#" target="_blank" rel="noopener">Paper</a>
+        <a class="btn blue" id="hfLink" href="#" target="_blank" rel="noopener">Hugging Face</a>
+      </nav>
+    </header>
+
+    <div class="accent" aria-hidden="true"></div>
+
+    <main>
+      <!-- Method overview figure -->
+      <figure aria-labelledby="figcap">
+        <!-- Put your figure file in ./assets/method_overview.png or update the src below -->
+        <img src="assets/method_overview.png" alt="Method overview figure" />
+        <figcaption id="figcap">Figure 1: Method overview. Replace this caption if desired.</figcaption>
+      </figure>
+
+      <!-- Samples -->
+      <section class="samples" aria-labelledby="samples-title">
+        <h2 id="samples-title">Speech Samples</h2>
+        <div class="grid" id="samples-grid" role="table" aria-label="Prompt, Resynthesis, Generated samples">
+          <!-- Header row -->
+          <div class="hdr" role="columnheader">Item</div>
+          <div class="hdr" role="columnheader">Prompt</div>
+          <div class="hdr" role="columnheader">Resynthesis</div>
+          <div class="hdr" role="columnheader">Generated</div>
+          <!-- Data rows injected by JS -->
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div>Color scheme: #1971c2 and black, Bauhaus-minimal layout. Keyboard controls: Enter/Space to play or pause, Left/Right to seek.</div>
+    </footer>
+  </div>
+
+  <script>
+    // ---------- CONFIG: set your links here ----------
+    document.getElementById('paperLink').href = 'https://example.com/your-paper.pdf';
+    document.getElementById('hfLink').href = 'https://huggingface.co/your-org/your-repo';
+
+    // ---------- DATA: edit this for your audio files ----------
+    // Place your audio files in the ./audio folder (or any path) and update the URLs below.
+    // Each item renders one row in the grid.
+    const SAMPLE_ROWS = [
+      { label: 'Sample 1', prompt: 'audio/sample1_prompt.wav',  resyn: 'audio/sample1_resyn.wav',  gen: 'audio/sample1_generated.wav' },
+      { label: 'Sample 2', prompt: 'audio/sample2_prompt.wav',  resyn: 'audio/sample2_resyn.wav',  gen: 'audio/sample2_generated.wav' },
+      // Add more rows as needed…
+    ];
+
+    // Keep a registry so only one player runs at a time
+    const PLAYERS = new Set();
+
+    function stopOthers(me){
+      for(const p of PLAYERS){ if(p !== me){ p.audio.pause(); } }
+    }
+
+    function createAudioLine(src, label){
+      const wrap = document.createElement('div');
+      wrap.className = 'audio';
+      wrap.setAttribute('role','button');
+      wrap.setAttribute('aria-label', label + ' (play/pause)');
+      wrap.tabIndex = 0;
+
+      const bar = document.createElement('div');
+      bar.className = 'bar';
+      const fill = document.createElement('div');
+      fill.className = 'fill';
+      const knob = document.createElement('div');
+      knob.className = 'knob';
+      bar.appendChild(fill); bar.appendChild(knob);
+
+      const time = document.createElement('div');
+      time.className = 'time';
+      time.textContent = '0:00';
+
+      wrap.appendChild(bar); wrap.appendChild(time);
+
+      const audio = new Audio(src);
+      audio.preload = 'metadata';
+
+      function fmt(t){
+        if(!isFinite(t)) return '0:00';
+        const m = Math.floor(t/60);
+        const s = Math.floor(t%60).toString().padStart(2,'0');
+        return m + ':' + s;
+      }
+
+      audio.addEventListener('loadedmetadata', ()=>{
+        time.textContent = fmt(0) + ' / ' + fmt(audio.duration);
+      });
+
+      audio.addEventListener('timeupdate', ()=>{
+        const p = audio.currentTime / (audio.duration || 1);
+        fill.style.width = (p*100).toFixed(2) + '%';
+        const knobX = Math.max(0, Math.min(100, p*100));
+        knob.style.left = knobX + '%';
+        time.textContent = fmt(audio.currentTime) + ' / ' + fmt(audio.duration);
+      });
+
+      audio.addEventListener('play', ()=>{ wrap.classList.add('playing'); stopOthers(player); });
+      audio.addEventListener('pause', ()=>{ wrap.classList.remove('playing'); });
+      audio.addEventListener('ended', ()=>{ audio.currentTime = 0; audio.pause(); });
+
+      function toggle(){
+        if(audio.paused){ audio.play(); } else { audio.pause(); }
+      }
+
+      // Click to play/pause or seek when clicking the bar
+      wrap.addEventListener('click', (e)=>{
+        const rect = bar.getBoundingClientRect();
+        const clickedOnBar = e.target === bar || e.target === fill || e.target === knob;
+        if(clickedOnBar){
+          const p = (e.clientX - rect.left) / rect.width;
+          if(isFinite(audio.duration)) audio.currentTime = Math.max(0, Math.min(audio.duration, p*audio.duration));
+          if(audio.paused) audio.play();
+        } else {
+          toggle();
+        }
+      });
+
+      // Keyboard controls
+      wrap.addEventListener('keydown', (e)=>{
+        if(e.code === 'Space' || e.code === 'Enter'){ e.preventDefault(); toggle(); }
+        if(e.code === 'ArrowRight'){ audio.currentTime = Math.min(audio.duration, audio.currentTime + 2); }
+        if(e.code === 'ArrowLeft'){ audio.currentTime = Math.max(0, audio.currentTime - 2); }
+      });
+
+      const player = {wrap, audio};
+      PLAYERS.add(player);
+
+      return wrap;
+    }
+
+    function addRow(grid, item){
+      const {label, prompt, resyn, gen} = item;
+      const c0 = document.createElement('div'); c0.className = 'col cell-label'; c0.textContent = label;
+      const c1 = document.createElement('div'); c1.className = 'col'; c1.appendChild(createAudioLine(prompt, label + ' prompt'));
+      const c2 = document.createElement('div'); c2.className = 'col'; c2.appendChild(createAudioLine(resyn, label + ' resynthesis'));
+      const c3 = document.createElement('div'); c3.className = 'col'; c3.appendChild(createAudioLine(gen,   label + ' generated'));
+      grid.appendChild(c0); grid.appendChild(c1); grid.appendChild(c2); grid.appendChild(c3);
+    }
+
+    // Render rows
+    const gridEl = document.getElementById('samples-grid');
+    SAMPLE_ROWS.forEach(item=>addRow(gridEl, item));
+  </script>
+</body>
+</html>

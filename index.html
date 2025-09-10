@@ -36,15 +36,15 @@
     /* Samples */
     .samples{margin-top:26px}
     .samples h2{font-size:20px;margin:0 0 10px}
-    .grid{display:grid;grid-template-columns:200px 1fr 1fr 1fr;gap:14px;align-items:center}
+    .grid{display:grid;grid-template-columns:1fr 1fr 1fr;px;align-items:center}
     .grid .hdr{font-size:14px;letter-spacing:.04em;text-transform:uppercase;color:var(--blue);border-bottom:2px solid var(--blue);padding-bottom:6px}
     .row{display:contents}
 
     /* Audio line control */
-    .audio{position:relative;height:28px;display:flex;align-items:center;cursor:pointer}
-    .audio .bar{position:relative;flex:1;height:4px;background:#d7e7f7;border-radius:3px;overflow:hidden}
-    .audio .fill{position:absolute;left:0;top:0;height:100%;width:0;background:var(--blue)}
-    .audio .knob{position:absolute;top:50%;transform:translate(-50%,-50%);width:0;height:0;border-left:7px solid var(--blue);border-top:6px solid transparent;border-bottom:6px solid transparent;}
+    .audio.audio{position:relative;height:32px;display:flex;align-items:center;gap:8px;cursor:pointer}er} 
+    .audio svg{flex:0 0 auto;display:block}
+    .audio .bar{position:relative;flex:1 1 auto;height:4px;background:#d7e7f7;border-radius:3px;overflow:hidden} 
+    .audio .fill{position:absolute;left: solid transparent;border-bottom:7px solid transparent;} 
     .audio.playing .knob{border-left-color:#000}
     .audio .time{font-size:12px;margin-left:8px;min-width:70px;text-align:right;color:#333}
     .cell-label{font-size:15px}
@@ -91,14 +91,11 @@
       <!-- Samples -->
       <section class="samples" aria-labelledby="samples-title">
         <h2 id="samples-title">Speech Samples</h2>
-        <div class="grid" id="samples-grid" role="table" aria-label="Prompt, Resynthesis, Generated samples">
-          <!-- Header row -->
-          <div class="hdr" role="columnheader">Item</div>
+        <div class="grid" id="samples-grid" role="table" aria-l<!-- Header row -->
           <div class="hdr" role="columnheader">Prompt</div>
           <div class="hdr" role="columnheader">Resynthesis</div>
           <div class="hdr" role="columnheader">Generated</div>
-          <!-- Data rows injected by JS -->
-        </div>
+          <!-- Data rows injected by JS -->        </div>
       </section>
     </main>
 
@@ -116,30 +113,25 @@
     // Place your audio files in the ./audio folder (or any path) and update the URLs below.
     // Each item renders one row in the grid.
     const SAMPLE_ROWS = [
-      { label: 'Sample 1', prompt: 'audio/sample1_prompt.wav',  resyn: 'audio/sample1_resyn.wav',  gen: 'audio/sample1_generated.wav' },
-      { label: 'Sample 2', prompt: 'audio/sample2_prompt.wav',  resyn: 'audio/sample2_resyn.wav',  gen: 'audio/sample2_generated.wav' },
-      // Add more rows as needed…
-    ];
-
-    // Keep a registry so only one player runs at a time
-    const PLAYERS = new Set();
-
-    function stopOthers(me){
-      for(const p of PLAYERS){ if(p !== me){ p.audio.pause(); } }
-    }
-
-    function createAudioLine(src, label){
+      { prompt: 'audio/sample1_prompt.wav',  resyn: 'audio/sample1_resyn.wav',  gen: 'audio/sample1_generated.wav' },
+      { prompt: 'audio/sample2_prompt.wav',  resyn: el){
       const wrap = document.createElement('div');
       wrap.className = 'audio';
       wrap.setAttribute('role','button');
       wrap.setAttribute('aria-label', label + ' (play/pause)');
       wrap.tabIndex = 0;
 
+      // Play icon (SV('height','16');
+      playSvg.setAttribute('aria-hidden','true');
+      const tri = document.createElementNS('http://www.w3.org/2000/svg','path');
+      tri.setAttribute('d','M8 5v14l11-7z');
+      tri.setAttribute('fill','var(--blue)');
+      playSvg.appendChild(tri);
+
       const bar = document.createElement('div');
       bar.className = 'bar';
       const fill = document.createElement('div');
-      fill.className = 'fill';
-      const knob = document.createElement('div');
+      fill.classateElement('div');
       knob.className = 'knob';
       bar.appendChild(fill); bar.appendChild(knob);
 
@@ -147,7 +139,7 @@
       time.className = 'time';
       time.textContent = '0:00';
 
-      wrap.appendChild(bar); wrap.appendChild(time);
+      wrap.appendChild(playSvg); wrap.appendChild(bar); wrap.appendChild(time);
 
       const audio = new Audio(src);
       audio.preload = 'metadata';
@@ -206,17 +198,8 @@
     }
 
     function addRow(grid, item){
-      const {label, prompt, resyn, gen} = item;
-      const c0 = document.createElement('div'); c0.className = 'col cell-label'; c0.textContent = label;
-      const c1 = document.createElement('div'); c1.className = 'col'; c1.appendChild(createAudioLine(prompt, label + ' prompt'));
-      const c2 = document.createElement('div'); c2.className = 'col'; c2.appendChild(createAudioLine(resyn, label + ' resynthesis'));
-      const c3 = document.createElement('div'); c3.className = 'col'; c3.appendChild(createAudioLine(gen,   label + ' generated'));
-      grid.appendChild(c0); grid.appendChild(c1); grid.appendChild(c2); grid.appendChild(c3);
-    }
-
-    // Render rows
-    const gridEl = document.getElementById('samples-grid');
-    SAMPLE_ROWS.forEach(item=>addRow(gridEl, item));
-  </script>
-</body>
-</html>
+      const {prompt, resyn, gen} = item;
+      const c1 = document.createElement('div'); c1.className = 'col'; c1.appendChild(createAudioLine(prompt, 'prompt'));
+      const c2 = document.createElement('div'); c2.className = 'col'; c2.appendChild(createAudioLine(resyn, 'resynthesis'));
+      const c3 = document.createElement('div'); c3.className = 'col'; c3.appendChild(createAudioLine(gen,   'generated'));
+      grid.appendChild(c1); grid.appendChil

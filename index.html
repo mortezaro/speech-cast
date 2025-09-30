@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Optimizing Speech Language Models for Acoustic Consistency– Demo</title>
+  <title>Optimizing Speech Language Models for Acoustic Consistency – Demo</title>
   <style>
     :root{
       --blue:#1971c2;
@@ -16,7 +16,8 @@
 
     .masthead{display:grid;grid-template-columns:1fr auto;gap:16px;align-items:end;margin-bottom:22px}
     .title{font-size:clamp(28px,4.5vw,44px);line-height:1.08;font-weight:800;letter-spacing:0.2px;margin:0}
-    .authors{font-size:clamp(14px,1.6vw,16px);opacity:.9;margin-top:6px}
+    .authors{font-size:clamp(14px,1.6vw,16px);opacity:.95;margin-top:6px}
+    .affil{font-size:clamp(13px,1.4vw,15px);opacity:.85;margin-top:2px}
 
     .links{display:flex;gap:10px;align-items:center}
     .btn{--h:36px;display:inline-flex;align-items:center;justify-content:center;height:var(--h);padding:0 14px;border:2px solid #000;border-radius:999px;text-decoration:none;color:#000;font-weight:700;font-size:14px;letter-spacing:.02em;background:#fff}
@@ -25,14 +26,13 @@
 
     .accent{height:8px;background:repeating-linear-gradient(90deg,var(--blue) 0 24px,#000 24px 48px);margin:18px 0 28px;border-radius:4px}
 
-    figure{margin:0;background:#fff;border:none solid #000;border-radius:0;padding:0}
-    figure img {
-     display:block;
-     width:70%;
-     height:auto;
-     border-radius:6px;
-    } 
-     figcaption{font-size:13px;margin-top:8px;color:#333}
+    .abstract{background:var(--cream);border:1px solid #e6dfcf;border-radius:12px;padding:16px 18px;margin:0 0 22px}
+    .abstract h2{font-size:18px;margin:0 0 8px}
+    .abstract p{margin:0;font-size:15px;line-height:1.6}
+
+    figure{margin:0;background:#fff;border:none;padding:0}
+    figure img{display:block;width:70%;height:auto;border-radius:6px}
+    figcaption{font-size:13px;margin-top:8px;color:#333}
 
     .samples{margin-top:26px}
     .samples h2{font-size:20px;margin:0 0 10px}
@@ -50,6 +50,7 @@
     footer{margin-top:42px;padding-top:12px;border-top:1px solid #ddd;font-size:13px;color:#333}
 
     @media (max-width:760px){
+      figure img{width:100%}
       .grid{grid-template-columns:1fr;}
       .grid .hdr{border-bottom:none}
       .row{display:block;border:1px solid #eee;border-radius:10px;padding:10px;margin-bottom:12px}
@@ -63,7 +64,8 @@
     <header class="masthead" role="banner">
       <div>
         <h1 class="title">Optimizing Speech Language Models for Acoustic Consistency</h1>
-        <div class="authors" id="authors">Authors: First Author, Second Author, Third Author</div>
+        <div class="authors" id="authors">Authors: Morteza Rohanian, Michael Krauthammer</div>
+        <div class="affil" id="affiliation">University of Zurich, Zurich, Switzerland</div>
       </div>
       <nav class="links" aria-label="Links">
         <a class="btn" id="paperLink" href="#" target="_blank" rel="noopener">Paper</a>
@@ -74,6 +76,14 @@
     <div class="accent"></div>
 
     <main>
+      <!-- Abstract inserted before the figure -->
+      <section class="abstract" aria-labelledby="abs-h">
+        <h2 id="abs-h">Abstract</h2>
+        <p>
+          We study speech language models that incorporate semantic initialization and planning losses to achieve robust and consistent generation. Our approach initializes speech tokens with self-supervised features, applies a light alignment loss, and trains with thinning and auxiliary objectives that target robustness and content planning. We train three models: a 0.7B speech-only model, a 1.0B speech-only model, and a 1.0B interleaved model with both text and speech. Acoustic studies show that the speech-only models achieve the highest consistency across speaker, gender, sentiment, room, and background factors, surpassing larger systems. Interleaving improves lexical and syntactic probes and semantic–acoustic alignment but reduces consistency. Linear probes show that our initialization biases the model toward content structure while trading off prosody detail. These results show that LM-side design and training mix control the balance between acoustic stability and semantic grounding without changes to the tokenizer or runtime architecture.
+        </p>
+      </section>
+
       <figure>
         <img src="assets/method_overview.png" alt="Method overview figure" />
         <figcaption>Figure 1: Method overview.</figcaption>
@@ -90,13 +100,20 @@
     </main>
 
     <footer>
-      <div> Keyboard controls: Enter/Space to play or pause, Left/Right to seek.</div>
+      <div>Keyboard controls: Enter/Space to play or pause, Left/Right to seek.</div>
     </footer>
   </div>
 
   <script>
+    // Paper link (replace with your actual PDF URL if different)
     document.getElementById('paperLink').href = 'https://example.com/your-paper.pdf';
-    document.getElementById('hfLink').href = 'https://huggingface.co/your-org/your-repo';
+
+    // Hugging Face link (updated)
+    document.getElementById('hfLink').href = 'https://huggingface.co/KrauthammerLab/cast-0.7b-s2s';
+
+    // Authors & affiliation (already set in HTML, but kept here if you later want to set dynamically)
+    document.getElementById('authors').textContent = 'Authors: Morteza Rohanian, Michael Krauthammer';
+    document.getElementById('affiliation').textContent = 'University of Zurich, Zurich, Switzerland';
 
     const SAMPLE_ROWS = [
       { prompt: 'audio/1.wav',  resyn: 'audio/1-2.wav',  gen: 'audio/1-3.wav' },
@@ -108,7 +125,7 @@
       { prompt: 'audio/7.wav',  resyn: 'audio/7-2.wav',  gen: 'audio/7-3.wav' },
       { prompt: 'audio/8.wav',  resyn: 'audio/8-2.wav',  gen: 'audio/8-3.wav' },
     ];
-    
+
     const PLAYERS = new Set();
     function stopOthers(me){ for(const p of PLAYERS){ if(p !== me){ p.audio.pause(); } } }
 

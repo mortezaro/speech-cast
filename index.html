@@ -7,32 +7,78 @@
   <style>
     :root{
       --blue:#5a9fd6;
-      --text:#111;
+      --text:#222; /* softer black */
+      --subtle:#444; /* for secondary text */
+      --border:#bbb;
       --bg:#fff;
-      --cream:#fafafa;
     }
-    html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:Inter, Helvetica, Arial, sans-serif;}
-    .page{max-width:1100px;margin:0 auto;padding:48px 24px 72px;}
 
-    .masthead{display:grid;grid-template-columns:1fr auto;gap:16px;align-items:end;margin-bottom:22px}
-    .title{font-size:clamp(28px,4.5vw,44px);line-height:1.08;font-weight:800;letter-spacing:0.2px;margin:0}
-    .authors{font-size:clamp(14px,1.6vw,16px);opacity:.95;margin-top:6px}
-    .affil{font-size:clamp(13px,1.4vw,15px);opacity:.85;margin-top:2px}
+    html,body{
+      margin:0;
+      padding:0;
+      background:var(--bg);
+      color:var(--text);
+      font-family:Inter, Helvetica, Arial, sans-serif;
+    }
+
+    .page{
+      max-width:1100px;
+      margin:0 auto;
+      padding:48px 24px 72px;
+    }
+
+    .masthead{
+      display:grid;
+      grid-template-columns:1fr auto;
+      gap:16px;
+      align-items:end;
+      margin-bottom:22px
+    }
+    .title{
+      font-size:clamp(28px,4.5vw,44px);
+      line-height:1.08;
+      font-weight:800;
+      letter-spacing:0.2px;
+      margin:0;
+      color:#111; /* slightly darker for title */
+    }
+    .authors{font-size:clamp(14px,1.6vw,16px);opacity:.9;margin-top:6px}
+    .affil{font-size:clamp(13px,1.4vw,15px);opacity:.8;margin-top:2px}
 
     .links{display:flex;gap:10px;align-items:center}
-    .btn{--h:36px;display:inline-flex;align-items:center;justify-content:center;height:var(--h);padding:0 14px;border:2px solid #000;border-radius:999px;text-decoration:none;color:#000;font-weight:700;font-size:14px;letter-spacing:.02em;background:#fff}
-    .btn:hover{transform:translateY(-1px)}
-    .btn.blue{border-color:var(--blue);color:#fff;background:var(--blue)}
+    .btn{
+      --h:36px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      height:var(--h);
+      padding:0 14px;
+      border:2px solid var(--subtle);
+      border-radius:999px;
+      text-decoration:none;
+      color:var(--subtle);
+      font-weight:700;
+      font-size:14px;
+      letter-spacing:.02em;
+      background:#fff;
+      transition:all 0.15s ease;
+    }
+    .btn:hover{transform:translateY(-1px);border-color:var(--blue);color:var(--blue);}
+    .btn.blue{
+      border-color:var(--blue);
+      color:#fff;
+      background:var(--blue);
+    }
 
-    /* Lightened accent bar */
+    /* Light accent bar */
     .accent{
       height:6px;
-      background:repeating-linear-gradient(90deg,#cde3f7 0 24px,#bbb 24px 48px);
+      background:repeating-linear-gradient(90deg,#d8ebfa 0 24px,#ccc 24px 48px);
       margin:18px 0 28px;
       border-radius:3px;
     }
 
-    /* Abstract box now white with subtle border and shadow */
+    /* Abstract box */
     .abstract{
       background:#fff;
       border:1px solid #e5e5e5;
@@ -41,26 +87,74 @@
       margin:0 0 22px;
       box-shadow:0 1px 3px rgba(0,0,0,0.05);
     }
-    .abstract p{margin:0;font-size:15px;line-height:1.65;color:#222;}
+    .abstract p{
+      margin:0;
+      font-size:15px;
+      line-height:1.65;
+      color:var(--text);
+    }
 
     figure{margin:0;background:#fff;border:none;padding:0}
     figure img{display:block;width:70%;height:auto;border-radius:6px}
-    figcaption{font-size:13px;margin-top:8px;color:#333}
+    figcaption{font-size:13px;margin-top:8px;color:var(--subtle)}
 
     .samples{margin-top:26px}
-    .samples h2{font-size:20px;margin:0 0 10px}
+    .samples h2{font-size:20px;margin:0 0 10px;color:var(--text)}
     .grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;align-items:center}
-    .grid .hdr{font-size:14px;letter-spacing:.04em;text-transform:uppercase;color:var(--blue);border-bottom:2px solid var(--blue);padding-bottom:6px;text-align:center}
+    .grid .hdr{
+      font-size:14px;
+      letter-spacing:.04em;
+      text-transform:uppercase;
+      color:var(--blue);
+      border-bottom:2px solid var(--blue);
+      padding-bottom:6px;
+      text-align:center
+    }
 
-    .audio{position:relative;height:28px;display:flex;align-items:center;cursor:pointer}
-    .audio .bar{position:relative;flex:1;height:4px;background:#d7e7f7;border-radius:3px;overflow:hidden}
-    .audio .fill{position:absolute;left:0;top:0;height:100%;width:0;background:var(--blue)}
-    .audio .knob{position:absolute;top:50%;transform:translate(-50%,-50%);width:0;height:0;border-left:7px solid var(--blue);border-top:6px solid transparent;border-bottom:6px solid transparent;}
-    .audio.playing .knob{border-left-color:#000}
-    .audio .time{font-size:12px;margin-left:8px;min-width:70px;text-align:right;color:#333}
+    .audio{
+      position:relative;
+      height:28px;
+      display:flex;
+      align-items:center;
+      cursor:pointer
+    }
+    .audio .bar{
+      position:relative;
+      flex:1;
+      height:4px;
+      background:#e8f2fb;
+      border-radius:3px;
+      overflow:hidden
+    }
+    .audio .fill{
+      position:absolute;
+      left:0;
+      top:0;
+      height:100%;
+      width:0;
+      background:var(--blue)
+    }
+    .audio .knob{
+      position:absolute;
+      top:50%;
+      transform:translate(-50%,-50%);
+      width:0;
+      height:0;
+      border-left:7px solid var(--blue);
+      border-top:6px solid transparent;
+      border-bottom:6px solid transparent;
+    }
+    .audio.playing .knob{border-left-color:var(--subtle);}
+    .audio .time{font-size:12px;margin-left:8px;min-width:70px;text-align:right;color:var(--subtle)}
     .play-icon{margin-right:8px;font-size:16px;color:var(--blue)}
 
-    footer{margin-top:42px;padding-top:12px;border-top:1px solid #ddd;font-size:13px;color:#333}
+    footer{
+      margin-top:42px;
+      padding-top:12px;
+      border-top:1px solid #ddd;
+      font-size:13px;
+      color:var(--subtle)
+    }
 
     @media (max-width:760px){
       figure img{width:100%}
@@ -77,8 +171,8 @@
     <header class="masthead" role="banner">
       <div>
         <h1 class="title">Optimizing Speech Language Models for Acoustic Consistency</h1>
-        <div class="authors" id="authors">Authors: Morteza Rohanian, Michael Krauthammer</div>
-        <div class="affil" id="affiliation">University of Zurich, Zurich, Switzerland</div>
+        <div class="authors">Authors: Morteza Rohanian, Michael Krauthammer</div>
+        <div class="affil">University of Zurich, Zurich, Switzerland</div>
       </div>
       <nav class="links" aria-label="Links">
         <a class="btn" id="paperLink" href="#" target="_blank" rel="noopener">Paper</a>
@@ -89,7 +183,7 @@
     <div class="accent"></div>
 
     <main>
-      <!-- Abstract (no heading) -->
+      <!-- Abstract -->
       <section class="abstract">
         <p>
           We study speech language models that incorporate semantic initialization and planning losses to achieve robust and consistent generation. Our approach initializes speech tokens with self-supervised features, applies a light alignment loss, and trains with thinning and auxiliary objectives that target robustness and content planning. We train three models: a 0.7B speech-only model, a 1.0B speech-only model, and a 1.0B interleaved model with both text and speech. Acoustic studies show that the speech-only models achieve the highest consistency across speaker, gender, sentiment, room, and background factors, surpassing larger systems. Interleaving improves lexical and syntactic probes and semantic–acoustic alignment but reduces consistency. Linear probes show that our initialization biases the model toward content structure while trading off prosody detail. These results show that LM-side design and training mix control the balance between acoustic stability and semantic grounding without changes to the tokenizer or runtime architecture.
@@ -117,9 +211,7 @@
   </div>
 
   <script>
-    // Paper link (replace if needed)
     document.getElementById('paperLink').href = 'https://example.com/your-paper.pdf';
-    // Hugging Face link
     document.getElementById('hfLink').href = 'https://huggingface.co/KrauthammerLab/cast-0.7b-s2s';
 
     const SAMPLE_ROWS = [
